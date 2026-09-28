@@ -1,0 +1,5 @@
+# pnpm 默认拦截依赖的安装脚本，这里逐个声明是否允许（未声明的会让安装失败）。
+allowBuilds:
+  esbuild: true # drizzle-kit 依赖的 esbuild 需要安装脚本来确认平台二进制
+  sharp: false
+  unrs-resolver: false

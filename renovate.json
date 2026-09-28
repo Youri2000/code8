@@ -1,0 +1,29 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended"],
+  "timezone": "Asia/Shanghai",
+  "schedule": ["before 9am on monday"],
+  "packageRules": [
+    {
+      "description": "每周把所有非破坏性更新合并成一个 PR",
+      "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
+      "groupName": "non-major dependencies",
+      "groupSlug": "all-non-major"
+    },
+    {
+      "description": "typescript-eslint 目前只支持 TypeScript < 6.1",
+      "matchPackageNames": ["typescript"],
+      "allowedVersions": "<6.1"
+    },
+    {
+      "description": "eslint-plugin-jsx-a11y 目前只支持 ESLint <= 9",
+      "matchPackageNames": ["eslint", "@eslint/js"],
+      "allowedVersions": "<10"
+    },
+    {
+      "description": "@types/node 与 .nvmrc 中的 Node LTS 主版本保持一致",
+      "matchPackageNames": ["@types/node"],
+      "allowedVersions": "<25"
+    }
+  ]
+}
