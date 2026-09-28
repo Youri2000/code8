@@ -25,16 +25,17 @@ pnpm dev                # http://localhost:3000
 
 ## 常用命令
 
-| 命令                                | 作用                                                           |
-| ----------------------------------- | -------------------------------------------------------------- |
-| `pnpm lint`                         | ESLint（含分层与 feature 边界检查）                            |
-| `pnpm typecheck`                    | 生成路由类型后执行 TypeScript 检查                             |
-| `pnpm format` / `pnpm format:check` | Prettier 格式化 / 检查                                         |
-| `pnpm test`                         | 单元测试（纯函数、状态机、图表渲染）                           |
-| `pnpm test:int`                     | 集成测试，连接 `.env.test` 中的测试数据库（需先 `pnpm db:up`） |
-| `pnpm db:generate`                  | 根据表结构变更生成迁移文件（提交到仓库）                       |
-| `pnpm db:migrate`                   | 执行迁移                                                       |
-| `pnpm db:studio`                    | 打开 Drizzle Studio                                            |
+| 命令                                | 作用                                                                             |
+| ----------------------------------- | -------------------------------------------------------------------------------- |
+| `pnpm lint`                         | ESLint（含分层与 feature 边界检查）                                              |
+| `pnpm typecheck`                    | 生成路由类型后执行 TypeScript 检查                                               |
+| `pnpm format` / `pnpm format:check` | Prettier 格式化 / 检查                                                           |
+| `pnpm test`                         | 单元测试（纯函数、状态机、图表渲染）                                             |
+| `pnpm test:int`                     | 集成测试，连接 `.env.test` 中的测试数据库（需先 `pnpm db:up`）                   |
+| `pnpm test:e2e`                     | 端到端测试（Playwright），首次运行前执行 `pnpm exec playwright install chromium` |
+| `pnpm db:generate`                  | 根据表结构变更生成迁移文件（提交到仓库）                                         |
+| `pnpm db:migrate`                   | 执行迁移                                                                         |
+| `pnpm db:studio`                    | 打开 Drizzle Studio                                                              |
 
 ## 协作约定
 

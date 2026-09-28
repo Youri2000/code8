@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
+import { Toaster } from "sonner";
 
 import "./globals.css";
 
@@ -21,6 +22,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     <html lang="zh-CN" className={inter.variable}>
       <body className="min-h-dvh bg-background font-sans text-foreground antialiased">
         {children}
+        <Toaster richColors position="top-center" />
       </body>
     </html>
   );

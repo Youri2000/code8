@@ -10,6 +10,7 @@ import tseslint from "typescript-eslint";
  *   app（路由层）→ features → engines → lib
  *                      ↘ components/ui ↗
  *   features/app → server（业务用例层 + 数据访问层）→ lib、env
+ *   domain（前后端共用的纯领域规则，如权限矩阵）只依赖 lib，可被 app/features/server/engines 引用
  *
  * - 一个 feature 只能通过另一个 feature 的 index.ts 引用它；engine 同理。
  * - components/ui 和 lib 不能反过来依赖任何业务代码。
@@ -25,6 +26,7 @@ const architecture = {
       { type: "feature", pattern: "src/features/*", capture: ["feature"] },
       { type: "engine", pattern: "src/engines/*", capture: ["engine"] },
       { type: "ui", pattern: "src/components/ui" },
+      { type: "domain", pattern: "src/domain" },
       { type: "lib", pattern: "src/lib" },
       { type: "server", pattern: "src/server" },
     ],
@@ -63,8 +65,12 @@ const architecture = {
             allow: { to: { element: { types: { anyOf: ["ui", "lib", "server"] } } } },
           },
           {
-            from: { element: { types: { anyOf: ["engine", "ui"] } } },
+            from: { element: { types: { anyOf: ["engine", "ui", "domain"] } } },
             allow: { to: { element: { type: "lib" } } },
+          },
+          {
+            from: { element: { types: { anyOf: ["app", "feature", "server", "engine"] } } },
+            allow: { to: { element: { type: "domain" } } },
           },
           {
             from: { element: { type: "server" } },
@@ -100,5 +106,26 @@ export default defineConfig([
     },
   },
   architecture,
+  {
+    // 业务用例层和数据访问层不依赖任何框架 API（ADR-0008），以便脱离 Next.js 测试和复用
+    files: ["src/server/services/**", "src/server/db/**"],
+    rules: {
+      "no-restricted-imports": [
+        "error",
+        {
+          patterns: [
+            { group: ["next", "next/*"], message: "业务用例层和数据访问层不能依赖 Next.js。" },
+            { group: ["react", "react-dom"], message: "业务用例层和数据访问层不能依赖 React。" },
+            { group: ["better-auth/next-js"], message: "业务用例层和数据访问层不能依赖 Next.js。" },
+          ],
+        },
+      ],
+    },
+  },
+  {
+    // Playwright fixture 的回调参数名为 use，会被误判为 React 的 use() hook
+    files: ["e2e/**"],
+    rules: { "react-hooks/rules-of-hooks": "off" },
+  },
   globalIgnores([".next/**", "out/**", "build/**", "next-env.d.ts", "drizzle/**"]),
 ]);

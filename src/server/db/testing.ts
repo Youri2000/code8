@@ -1,6 +1,7 @@
-import { db, type Db } from "./client";
+import { db, type Tx } from "./client";
+import { user } from "./schema";
 
-export type Tx = Parameters<Parameters<Db["transaction"]>[0]>[0];
+export type { Tx };
 
 class Rollback extends Error {}
 
@@ -20,4 +21,22 @@ export async function withRollback(fn: (tx: Tx) => Promise<void>): Promise<void>
 
 export async function closeDb(): Promise<void> {
   await db.$client.end();
+}
+
+let userSeq = 0;
+
+/** 直接写入一个 User（不经过 Better Auth），用于业务用例层的测试。 */
+export async function createTestUser(
+  tx: Tx,
+  overrides: Partial<{ name: string; email: string }> = {},
+): Promise<{ id: string; name: string; email: string }> {
+  userSeq += 1;
+  const [row] = await tx
+    .insert(user)
+    .values({
+      name: overrides.name ?? `测试用户${userSeq}`,
+      email: overrides.email ?? `user-${userSeq}-${crypto.randomUUID()}@wenshu.test`,
+    })
+    .returning({ id: user.id, name: user.name, email: user.email });
+  return row!;
 }
