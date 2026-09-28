@@ -1,0 +1,7 @@
+pnpm-lock.yaml
+next-env.d.ts
+/drizzle/meta
+# 手写的中文文档不交给 Prettier 重排
+/docs
+CONTEXT.md
+CLAUDE.md

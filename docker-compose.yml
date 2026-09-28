@@ -1,0 +1,35 @@
+# 本地开发依赖：Postgres + S3 兼容对象存储（RustFS）。
+# 启动：pnpm db:up    停止：pnpm db:down
+services:
+  postgres:
+    image: postgres:18-alpine
+    environment:
+      POSTGRES_USER: wenshu
+      POSTGRES_PASSWORD: wenshu
+      POSTGRES_DB: wenshu
+    ports:
+      - "5432:5432"
+    volumes:
+      # Postgres 18 起镜像的数据目录挂载点是 /var/lib/postgresql
+      - postgres-data:/var/lib/postgresql
+      - ./docker/postgres/init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U wenshu -d wenshu"]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+
+  # MinIO 已停止发布社区版镜像，本地改用同样兼容 S3 接口的 RustFS。
+  s3:
+    image: rustfs/rustfs:1.0.0
+    environment:
+      RUSTFS_ACCESS_KEY: wenshu
+      RUSTFS_SECRET_KEY: wenshu-secret
+    ports:
+      - "9000:9000"
+    volumes:
+      - s3-data:/data
+
+volumes:
+  postgres-data:
+  s3-data:

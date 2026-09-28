@@ -153,7 +153,7 @@
 - **读操作**由 RSC 直接调用业务用例层。
 - **Route Handler** 只用于四类场景：AI 流式输出、签发上传用的预签名 URL、拉取快照、定时任务入口。不用 tRPC，不对外提供 REST API。
 - **middleware（proxy）** 只做"没有登录 cookie 就重定向到登录页"，不承担授权。
-- **基础设施**只有 Postgres、S3 兼容的对象存储和应用本身，不用 Redis、不用消息队列（ADR-0010）。本地开发用 Docker Compose 运行 Postgres 和 MinIO。
+- **基础设施**只有 Postgres、S3 兼容的对象存储和应用本身，不用 Redis、不用消息队列（ADR-0010）。本地开发用 Docker Compose 运行 Postgres 和 RustFS（兼容 S3；MinIO 已停止发布社区版 Docker 镜像）。
 
 ### 身份认证与授权
 
@@ -372,7 +372,7 @@
 ## Further Notes
 
 - **项目定位**：这是一个面向校招的作品集项目，目标岗位是大厂前端和 AI 产品前端。取舍标准是"每个方案在面试时都能讲出具体的问题和对应的解法"，并且看起来像企业级产品，而不是个人玩具。
-- **部署方式尚未决定**：两个候选是 Vercel + Neon + R2，以及香港轻量服务器 + Docker Compose（Next.js standalone、Postgres、MinIO、Caddy）。当前倾向后者，因为国内面试官能稳定打开。代码一律按 S3 兼容接口编写，第一次上线前再定。注意：OpenAI 和 Anthropic 的 API 不支持中国大陆和香港地区，这也是选择 DeepSeek 的原因之一。
+- **部署方式尚未决定**：两个候选是 Vercel + Neon + R2，以及香港轻量服务器 + Docker Compose（Next.js standalone、Postgres、RustFS、Caddy）。当前倾向后者，因为国内面试官能稳定打开。代码一律按 S3 兼容接口编写，第一次上线前再定。注意：OpenAI 和 Anthropic 的 API 不支持中国大陆和香港地区，这也是选择 DeepSeek 的原因之一。
 - **讨论中没有明确、这里采用的默认值**：
   1. 看板布局在并发编辑时，后保存的覆盖先保存的；
   2. 演示数据用脚本生成的合成数据，避免版权问题；
