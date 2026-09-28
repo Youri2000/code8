@@ -268,6 +268,7 @@
 ### 前端架构（ADR-0011）
 
 - 分层（依赖只能从上往下，由 lint 强制）：路由层（RSC 取数据、组合 feature）→ 界面层（按 feature 划分的组件）→ React 适配层（很薄的 hook）→ 模块层（不依赖 React：查询引擎、ChartSpec 映射、状态机）→ 通用工具。
+- 前后端共用的纯领域规则（例如权限矩阵）放在单独的 domain 层：只依赖通用工具，路由层、feature、服务端和模块层都可以引用它。
 - 按业务领域划分 feature：auth、workspace、dataset、conversation、chart、board、share，名称和 CONTEXT.md 的术语一致。一个 feature 只能通过另一个 feature 的公开出口引用它；服务端代码都标记为 server-only。
 - 异步状态统一用带标签的联合类型；有明确生命周期的流程（上传、粘底、客户端的 Answer 生命周期）写成手写的带类型 reducer，不用 XState。
 - 开启 React Compiler，默认不手写 useMemo、useCallback、memo；只有测量证明需要的地方才手动加，并记录进性能日志。

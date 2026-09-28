@@ -9,7 +9,7 @@ if (!url) throw new Error("DATABASE_URL is not set; copy .env.example to .env.lo
 
 export default defineConfig({
   dialect: "postgresql",
-  schema: "./src/server/db/schema.ts",
+  schema: "./src/server/db/schema/index.ts",
   out: "./drizzle",
   dbCredentials: { url },
   strict: true,
